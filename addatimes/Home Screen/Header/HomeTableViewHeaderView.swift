@@ -7,8 +7,10 @@
 
 import UIKit
 
-class HomeTableViewHeaderView: UITableViewHeaderFooterView {
+class  HomeTableViewHeaderView: UITableViewHeaderFooterView {
 
-
-
+    @IBOutlet weak var categoryLabel: UILabel!
+    
 }
+ 
+

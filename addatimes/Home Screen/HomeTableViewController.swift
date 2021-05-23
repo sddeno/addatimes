@@ -10,10 +10,22 @@ import UIKit
 class HomeTableViewController: UITableViewController {
 
     let tableViewCellIdentifier = "HomeTableCell"
+    let collectionViewCellIdentifier = "HomeCollectionCell"
+     
+    let tableViewHeaderNibName = "HomeTableViewHeaderView"
+    let tableViewHeaderIdentifier = "HomeTableViewHeaderView"
+    
+    var movieManager = MovieManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         
+        
+        movieManager.delegate = self
+        movieManager.fetchData()
+        
+        // register HomeTableViewHeaderView.xib
+        let headerNib = UINib(nibName: tableViewHeaderNibName, bundle: nil)
+        tableView.register(headerNib, forHeaderFooterViewReuseIdentifier: tableViewHeaderIdentifier)
     }
 
     // MARK: - UITableViewDataSource
@@ -32,6 +44,53 @@ class HomeTableViewController: UITableViewController {
      
     // MARK: - UITableViewDelegate
     
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 35
+    } 
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 12
+    }
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: tableViewHeaderIdentifier) as! HomeTableViewHeaderView
+        headerView.categoryLabel.text = " Trending Movies"
+        return headerView
+    }
 
 }
+
+
+
+
+// Mark: - UICollectionViewDataSource
+
+extension HomeTableViewController : UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 15
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: collectionViewCellIdentifier, for: indexPath) as! HomeCollectionViewCell
+        return cell
+    }
+
+}
+
+
+
+
+
+ //Mark: - MovieManagerDelegate
+extension HomeTableViewController : MovieManagerDelegate {
+    
+    func didUpdateMovie(_ Manager: MovieManager, movieObject: MovieModel) {
+        print(movieObject.allMovies[0].title)
+    }
+    
+    func didFailWithError(error: Error) {
+        print(error)
+    }
+    
+
+}
+
 

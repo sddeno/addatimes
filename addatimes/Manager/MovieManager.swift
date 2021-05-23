@@ -7,10 +7,20 @@
 
 import Foundation
 
+
+protocol MovieManagerDelegate {
+    func didUpdateMovie(_ Manager :MovieManager, movieObject: MovieModel)
+    func didFailWithError(error: Error)
+}
+
 typealias byteData = Data
+
 struct MovieManager {
     
     let urlString = "https://addatimes.webappfactory.co/api/v3/home/mobile"
+    
+    var delegate: MovieManagerDelegate?
+    
     
     func fetchData(){
         performRequest(with: urlString)
@@ -24,7 +34,7 @@ struct MovieManager {
             let session = URLSession(configuration: .default)
             
             // 3. Give URL Session a task
-          let task = session.dataTask(with: url) { (data, response, error) in
+            let task = session.dataTask(with: url) { (data, response, error) in
                 
                 if error != nil {
                     // print error error message in console
@@ -33,36 +43,65 @@ struct MovieManager {
                 }
                 
                 if let safeData = data {
-                    if self.parseJSON(safeData) != nil{
-                        // i'll get weater data model / say movie model object
-                        // and i'll use the delegate to pass it to view controller
+                    if let movieObject = self.parseJSON(safeData){
+                        self.delegate?.didUpdateMovie(self, movieObject: movieObject)
                     }
                 }
-          }
-        
+            }
+            
             // 4. Start the task
             task.resume()
         }
     }
-
-    func parseJSON(_ movieData: byteData) -> MovieModel?{
+    
+    func parseJSON(_ movieData: byteData) -> MovieModel? {
         let decoder = JSONDecoder()
         
-        do{
+        do {
             let decodedData = try decoder.decode(MovieData.self, from: movieData)
             
             // fetch and make object with the received parsed data
-            let success = decodedData.success
-            let categoryId = decodedData.data[0].category_id
             
-            let movie = MovieModel(success: success, category_id: categoryId)
-            return movie
+            
+            var allSections = [Section]()
+            
+            var section: Section
+            
+            var title: String
+            var items = [item]()
+            
+            for x in 3...14{
+                title = decodedData.data[x].title
+                for y in 0...(decodedData.data[x].items.count)-1 {
+                    
+                    let newId: Int
+                    let new_vertical_image:String
+                    
+                    newId = decodedData.data[x].items[y].id
+                    new_vertical_image = decodedData.data[x].items[y].vertical_image
+                    
+                    var newItem:item
+                    newItem = item(id: newId, vertical_image: new_vertical_image)
+                    items.append(newItem)
+                }
+                section = Section(title: title, items: items)
+                allSections.append(section)
+            }
+            
+            
+            //let section = MovieModel(title: title, items: items)
+            let allSection = MovieModel(allMovies: allSections)
+            return allSection
+            
             
         } catch {
-            
+            print("ERROR - Print in console")
+            print(error)
+            // self.delegate?.didFailWithError(error: error)
             return nil
         }
     }
-
-
+    
+    
 }
+

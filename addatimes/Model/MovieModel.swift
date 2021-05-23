@@ -8,6 +8,17 @@
 import Foundation
 
 struct MovieModel {
-    let success: Bool
-    let category_id: Int
+    
+    let allMovies: [Section]
+}
+
+struct Section {
+    
+    let title: String
+    let items: [item]
+}
+
+struct item {
+    let id: Int
+    let vertical_image: String
 }
