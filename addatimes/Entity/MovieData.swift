@@ -8,13 +8,13 @@
 import Foundation
 
 struct MovieData: Codable {
-
+    
     let success: Bool
     let data: [DataM]
 }
 
 struct DataM: Codable {
-
+    
     let title: String
     let items: [Items]
     let banners: [[Banners]]
@@ -39,7 +39,7 @@ struct DataM: Codable {
     }
     
     init(from decoder: Decoder) throws {
-    
+        
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         // if the value is missing OR not missing but has NULL decodeIfPreent will handle
@@ -61,7 +61,7 @@ struct DataM: Codable {
         self.slug = try values.decodeIfPresent(String.self, forKey: .slug) ?? "NA"
         
         self.top_banner = try values.decodeIfPresent(Top_Banner.self, forKey: .top_banner) ?? nil
-    
+        
     }
     
 }
@@ -83,11 +83,11 @@ struct Genres: Codable {
     init(from decoder: Decoder) throws {
         // 1 - container
         let values = try decoder.container(keyedBy: CodingKeys.self)
-
+        
         self.title = try values.decodeIfPresent(String.self, forKey: .title) ?? "NA"
         
         self.image = try values.decodeIfPresent(String.self, forKey: .image) ?? "NA"
-       
+        
         self.slug = try values.decodeIfPresent(String.self, forKey: .slug) ?? "NA"
     }
     
@@ -114,7 +114,7 @@ struct Top_Banner: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         self.image = try values.decodeIfPresent(String.self, forKey: .image) ?? "NA"
-       
+        
         self.slug = try values.decodeIfPresent(String.self, forKey: .slug) ?? "NA"
         
         self.trailer_id = try values.decodeIfPresent(String.self, forKey: .trailer_id) ?? "NA"
@@ -153,7 +153,7 @@ struct Items: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         self.id = try values.decodeIfPresent(Int.self, forKey: .id) ?? 0
-       
+        
         self.slug = try values.decodeIfPresent(String.self, forKey: .slug) ?? "NA"
         
         self.brightcove_trailer_id = try values.decodeIfPresent(String.self, forKey: .brightcove_trailer_id) ?? "NA"
@@ -188,7 +188,7 @@ struct Banners: Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         
         self.id = try values.decodeIfPresent(Int.self, forKey: .id) ?? 0
-       
+        
         self.banner_id = try values.decodeIfPresent(Int.self, forKey: .banner_id) ?? 0
         
         self.image = try values.decodeIfPresent(String.self, forKey: .image) ?? "NA"

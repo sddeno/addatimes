@@ -8,7 +8,6 @@
 import Foundation
 
 struct MovieModel {
-    
     let allMovies: [Section]
 }
 
@@ -22,3 +21,4 @@ struct item {
     let id: Int
     let vertical_image: String
 }
+

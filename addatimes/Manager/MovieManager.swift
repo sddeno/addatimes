@@ -20,8 +20,7 @@ struct MovieManager {
     let urlString = "https://addatimes.webappfactory.co/api/v3/home/mobile"
     
     var delegate: MovieManagerDelegate?
-    
-    
+
     func fetchData(){
         performRequest(with: urlString)
     }
@@ -59,14 +58,9 @@ struct MovieManager {
         
         do {
             let decodedData = try decoder.decode(MovieData.self, from: movieData)
-            
-            // fetch and make object with the received parsed data
-            
-            
+        
             var allSections = [Section]()
-            
             var section: Section
-            
             var title: String
             var items = [item]()
             
@@ -93,11 +87,8 @@ struct MovieManager {
             let allSection = MovieModel(allMovies: allSections)
             return allSection
             
-            
         } catch {
-            print("ERROR - Print in console")
-            print(error)
-            // self.delegate?.didFailWithError(error: error)
+            self.delegate?.didFailWithError(error: error)
             return nil
         }
     }
